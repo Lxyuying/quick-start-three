@@ -8,7 +8,9 @@ var scene = new THREE.Scene()
 // 立方体网格模型
 var geometry1 = new THREE.BoxGeometry(100, 100, 100)
 var material1 = new THREE.MeshLambertMaterial({
-  color: 0x0000ff
+  color: 0xff0000,
+  opacity: 0.7,
+  transparent: true
 }) //材质对象Material
 var mesh1 = new THREE.Mesh(geometry1, material1) //网格模型对象Mesh
 scene.add(mesh1) //网格模型添加到场景中
@@ -18,6 +20,8 @@ var geometry2 = new THREE.SphereGeometry(60, 40, 40)
 var material2 = new THREE.MeshLambertMaterial({
   color: 0xff00ff
 })
+material2.opacity = 0.5
+material2.transparent = true
 var mesh2 = new THREE.Mesh(geometry2, material2) //网格模型对象Mesh
 mesh2.translateY(120) //球体网格模型沿Y轴正方向平移120
 scene.add(mesh2)
@@ -25,7 +29,10 @@ scene.add(mesh2)
 // 圆柱网格模型
 var geometry3 = new THREE.CylinderGeometry(50, 50, 100, 25)
 var material3 = new THREE.MeshLambertMaterial({
-  color: 0xffff00
+  color: 0x0000ff,
+  // 添加高光效果
+  specular: 0x4488ee,
+  shininess: 12
 })
 var mesh3 = new THREE.Mesh(geometry3, material3) //网格模型对象Mesh
 // mesh3.translateX(120); //球体网格模型沿Y轴正方向平移120
