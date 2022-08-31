@@ -27,10 +27,10 @@ export const createSphere = () => {
 export const createCylinder = () => {
   var geometry3 = new THREE.CylinderGeometry(50, 50, 100, 25)
   var material3 = new THREE.MeshLambertMaterial({
-    color: 0x0000ff,
+    color: 0x0000ff
     // 添加高光效果
-    specular: 0x4488ee,
-    shininess: 12
+    // specular: 0x4488ee,
+    // shininess: 12
   })
   var mesh3 = new THREE.Mesh(geometry3, material3) //网格模型对象Mesh
   // mesh3.translateX(120); //球体网格模型沿Y轴正方向平移120
@@ -114,8 +114,8 @@ export const createBufferGeometry = () => {
   var material = new THREE.MeshBasicMaterial({
     // 使用顶点颜色数据渲染模型，不需要再定义color属性
     // color: 0xff0000,
-    vertexColors: colors, //THREE.VertexColors, //以顶点颜色为准
-    size: 10.0 //点对象像素尺寸
+    vertexColors: colors //THREE.VertexColors, //以顶点颜色为准
+    // size: 10.0 //点对象像素尺寸
   })
   // 点渲染模式  点模型对象Points
   var points = new THREE.Mesh(geometry, material) //点模型对象
@@ -294,6 +294,7 @@ export const createLight = scene => {
   //点光源
   var point = new THREE.PointLight(0xffffff)
   point.position.set(400, 200, 300) //点光源位置
+  // point.geometry.scale(1, 1, -1)
   scene.add(point) //点光源添加到场景中
   // 点光源2  位置和point关于原点对称
   var point2 = new THREE.PointLight(0xffffff)
@@ -301,9 +302,10 @@ export const createLight = scene => {
   scene.add(point2) //点光源添加到场景中
   var point3 = new THREE.PointLight(0xffffff)
   point3.position.set(-400, 200, 300) //点光源位置
+
   scene.add(point3) //点光源添加到场景中
   var point4 = new THREE.PointLight(0xffffff)
-  // point4.position.set(400, 300, 300) //点光源位置
+  point4.position.set(400, -300, 300) //点光源位置
   scene.add(point4) //点光源添加到场景中
   //环境光
   var ambient = new THREE.AmbientLight(0x444444)
@@ -344,5 +346,66 @@ export const createCanvasTexture = () => {
   // 创建一个矩形平面网模型，Canvas画布作为矩形网格模型的纹理贴图
   var mesh = new THREE.Mesh(geometry, material)
   mesh.position.set(-200, 200, 0)
+  return mesh
+}
+
+export const createCanvasPic = () => {
+  var canvas = document.createElement('canvas')
+  var texture = new THREE.CanvasTexture(canvas)
+  var geometry = new THREE.PlaneGeometry(128, 128)
+  var ctx = canvas.getContext('2d')
+  var Image = document.createElement('img')
+
+  Image.onload = function () {
+    var bg = ctx.createPattern(Image, 'no-repeat')
+    console.log(bg)
+    texture.needsUpdate = true
+  }
+  Image.src = 'Earth.png'
+  var texture = new THREE.CanvasTexture(canvas)
+  var material = new THREE.MeshPhongMaterial({
+    map: texture // 设置纹理贴图
+  })
+  var mesh = new THREE.Mesh(geometry, material)
+  mesh.position.set(-200, -80, 0)
+  return mesh
+}
+
+export const createVideoTextrue = () => {
+  // 创建video对象
+  let video = document.createElement('video')
+  video.src = 'xiaohei.mp4' // 设置视频地址
+  video.autoplay = 'autoplay' //要设置播放
+  video.loop = true
+  // video对象作为VideoTexture参数创建纹理对象
+  var texture = new THREE.VideoTexture(video)
+  var geometry = new THREE.PlaneGeometry(108, 71) //矩形平面
+  var material = new THREE.MeshPhongMaterial({
+    map: texture // 设置纹理贴图
+  }) //材质对象Material
+  var mesh = new THREE.Mesh(geometry, material) //网格模型对象Mesh
+  mesh.position.set(200, 400, 0)
+  return mesh
+}
+
+export const createSixImg = () => {
+  var geometry = new THREE.BoxGeometry(10000, 10000, 10000) //立方体
+
+  var loader = new THREE.CubeTextureLoader()
+  // 所有贴图在同一目录下，可以使用该方法设置共用路径
+  // loader.setPath('环境贴图/')
+  // 立方体纹理加载器返回立方体纹理对象CubeTexture
+  var CubeTexture = loader.load(['4_l.jpg', '4_r.jpg', '4_u.jpg', '4_d.jpg', '4_b.jpg', '4_f.jpg'].reverse())
+  //材质对象Material
+  var material = new THREE.MeshPhongMaterial({
+    //网格模型设置颜色，网格模型颜色和环境贴图会进行融合计算
+    // color:0xff0000,
+    envMap: CubeTexture //设置环境贴图
+  })
+  // console.log(CubeTexture.image)
+  var mesh = new THREE.Mesh(geometry, material) //网格模型对象Mesh
+  // mesh.material.specular.set(0xffffff) // 高光反射颜色
+  // mesh.material.shininess = 1000 // 高光高亮程度，默认30
+  mesh.geometry.scale(1, 1, -1)
   return mesh
 }
