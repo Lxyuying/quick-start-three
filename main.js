@@ -195,6 +195,21 @@ scene.updateMatrixWorld(true)
 var worldPosition = new THREE.Vector3()
 mesh.getWorldPosition(worldPosition)
 console.log('世界坐标', worldPosition)
+
+var geometry = new THREE.BufferGeometry() //声明一个几何体对象Geometry
+//参数：0, 0圆弧坐标原点x，y  100：圆弧半径    0, 2 * Math.PI：圆弧起始角度
+var arc = new THREE.ArcCurve(0, 0, 100, 0, 2 * Math.PI)
+//getPoints是基类Curve的方法，返回一个vector2对象作为元素组成的数组
+var points = arc.getPoints(50) //分段数50，返回51个顶点
+// setFromPoints方法从points中提取数据改变几何体的顶点属性vertices
+geometry.setFromPoints(points)
+//材质对象
+var material = new THREE.LineBasicMaterial({
+  color: 0x000000
+})
+//线条模型对象
+var line = new THREE.Line(geometry, material)
+scene.add(line) //线条对象添加到场景中
 /**
  * 光源设置
  */
