@@ -122,6 +122,60 @@ var points = new THREE.Mesh(geometry, material) //点模型对象
 points.position.set(-180, 0, 0) //设置mesh3模型对象的xyz坐标为120,0,0
 scene.add(points) //点对象添加到场景
 
+// 头部网格模型和组
+var headMesh = sphereMesh(10, 0, 0, 0)
+headMesh.name = '脑壳'
+var leftEyeMesh = sphereMesh(1, 8, 5, 4)
+leftEyeMesh.name = '左眼'
+var rightEyeMesh = sphereMesh(1, 8, 5, -4)
+rightEyeMesh.name = '右眼'
+var headGroup = new THREE.Group()
+headGroup.name = '头部'
+headGroup.add(headMesh, leftEyeMesh, rightEyeMesh)
+// 身体网格模型和组
+var neckMesh = cylinderMesh(3, 10, 0, -15, 0)
+neckMesh.name = '脖子'
+var bodyMesh = cylinderMesh(14, 30, 0, -35, 0)
+bodyMesh.name = '腹部'
+var leftLegMesh = cylinderMesh(4, 60, 0, -80, -7)
+leftLegMesh.name = '左腿'
+var rightLegMesh = cylinderMesh(4, 60, 0, -80, 7)
+rightLegMesh.name = '右腿'
+var legGroup = new THREE.Group()
+legGroup.name = '腿'
+legGroup.add(leftLegMesh, rightLegMesh)
+var bodyGroup = new THREE.Group()
+bodyGroup.name = '身体'
+bodyGroup.add(neckMesh, bodyMesh, legGroup)
+// 人Group
+var personGroup = new THREE.Group()
+personGroup.name = '人'
+personGroup.add(headGroup, bodyGroup)
+// personGroup.translateY(150)
+personGroup.translateZ(150)
+scene.add(personGroup)
+
+// 球体网格模型创建函数
+function sphereMesh(R, x, y, z) {
+  var geometry = new THREE.SphereGeometry(R, 25, 25) //球体几何体
+  var material = new THREE.MeshPhongMaterial({
+    color: 0x0000ff
+  }) //材质对象Material
+  var mesh = new THREE.Mesh(geometry, material) // 创建网格模型对象
+  mesh.position.set(x, y, z)
+  return mesh
+}
+// 圆柱体网格模型创建函数
+function cylinderMesh(R, h, x, y, z) {
+  var geometry = new THREE.CylinderGeometry(R, R, h, 25, 25) //球体几何体
+  var material = new THREE.MeshPhongMaterial({
+    color: 0x0000ff
+  }) //材质对象Material
+  var mesh = new THREE.Mesh(geometry, material) // 创建网格模型对象
+  mesh.position.set(x, y, z)
+  return mesh
+}
+
 /**
  * 光源设置
  */
