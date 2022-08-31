@@ -230,6 +230,26 @@ textureLoader.load('Earth.png', function (texture) {
   //纹理贴图加载成功后，调用渲染函数执行渲染操作
   // render();
 })
+
+/**
+ * 创建一个地面
+ */
+var geometry8 = new THREE.PlaneGeometry(500, 500) //矩形平面
+// 加载树纹理贴图
+var texture = new THREE.TextureLoader().load('grass.jpg')
+// 设置阵列
+texture.wrapS = THREE.RepeatWrapping
+texture.wrapT = THREE.RepeatWrapping
+// uv两个方向纹理重复数量
+texture.repeat.set(10, 10)
+var material8 = new THREE.MeshLambertMaterial({
+  map: texture
+})
+var mesh = new THREE.Mesh(geometry8, material8) //网格模型对象Mesh
+mesh.position.set(0, -120.0)
+scene.add(mesh) //网格模型添加到场景中
+mesh.rotateX(-Math.PI / 2)
+// textureLoader.offset = new THREE.Vector2(0.3, 0.1)
 /**
  * 光源设置
  */
