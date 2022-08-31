@@ -75,3 +75,7 @@ function render() {
 render()
 new OrbitControls(camera, renderer.domElement) //创建控件对象
 // controls.addEventListener('change', render) //监听鼠标、键盘事件
+
+// 辅助坐标系  参数250表示坐标系大小，可以根据场景大小去设置
+var axisHelper = new THREE.AxesHelper(500)
+scene.add(axisHelper)
