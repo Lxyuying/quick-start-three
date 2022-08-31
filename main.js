@@ -2,7 +2,7 @@ import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
-import { createSixImg, createVideoTextrue, createCanvasPic, createCanvasTexture, createLight, createPicFlow, createRctGrass, createPicCircle, createCircleLine, createPersonMesh, createBox, createSphere, createCylinder, createBufferGeometry, printLocal } from './utils'
+import { createTree, createSixImg, createVideoTextrue, createCanvasPic, createCanvasTexture, createLight, createPicFlow, createRctGrass, createPicCircle, createCircleLine, createPersonMesh, createBox, createSphere, createCylinder, createBufferGeometry, printLocal } from './utils'
 
 /**
  * 创建场景对象Scene
@@ -34,6 +34,7 @@ scene.add(createCanvasTexture())
 scene.add(createCanvasPic())
 scene.add(createVideoTextrue())
 scene.add(createSixImg())
+createTree(scene)
 
 /**
  * 相机设置

@@ -247,7 +247,7 @@ export const createRctGrass = () => {
   /**
    * 创建一个地面
    */
-  var geometry8 = new THREE.PlaneGeometry(500, 500) //矩形平面
+  var geometry8 = new THREE.PlaneGeometry(1000, 1000) //矩形平面
   // 加载树纹理贴图
   var texture = new THREE.TextureLoader().load('grass.jpg')
   // 设置阵列
@@ -408,4 +408,27 @@ export const createSixImg = () => {
   // mesh.material.shininess = 1000 // 高光高亮程度，默认30
   mesh.geometry.scale(1, 1, -1)
   return mesh
+}
+
+export const createTree = scene => {
+  /**
+   * 精灵创建树林效果
+   */
+  // 加载树纹理贴图
+  var textureTree = new THREE.TextureLoader().load('tree.png')
+  // 批量创建表示一个树的精灵模型
+  for (let i = 0; i < 100; i++) {
+    var spriteMaterial = new THREE.SpriteMaterial({
+      map: textureTree //设置精灵纹理贴图
+    })
+    // 创建精灵模型对象
+    var sprite = new THREE.Sprite(spriteMaterial)
+    scene.add(sprite)
+    // 控制精灵大小,
+    sprite.scale.set(100, 100, 1) //// 只需要设置x、y两个分量就可以
+    var k1 = Math.random() - 0.5
+    var k2 = Math.random() - 0.5
+    // 设置精灵模型位置，在xoz平面上随机分布
+    sprite.position.set(1000 * k1, -70, 1000 * k2)
+  }
 }
