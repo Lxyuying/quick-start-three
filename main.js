@@ -40,8 +40,7 @@ mesh3.position.set(120, 0, 0) //设置mesh3模型对象的xyz坐标为120,0,0
 scene.add(mesh3) //
 
 // 自定义几何体
-var geometry = new THREE.BufferGeometry() //声明一个缓冲几何体对象
-
+var geometry = new THREE.BufferGeometry() //声明一个空几何体对象
 //类型数组创建顶点位置position数据
 var vertices = new Float32Array([
   0,
@@ -56,16 +55,39 @@ var vertices = new Float32Array([
 
   0,
   0,
-  10, //顶点4坐标
+  0, //顶点4坐标
   0,
   0,
   100, //顶点5坐标
   50,
   0,
-  10 //顶点6坐标
+  0 //顶点6坐标
 ])
 // 创建属性缓冲区对象
-var attribue = new THREE.BufferAttribute(vertices, 3) //3个为一组，作为一个顶点的xyz坐标
+var attribue = new THREE.BufferAttribute(vertices, 3) //3个为一组
+var normals = new Float32Array([
+  0,
+  0,
+  1, //顶点1法向量
+  0,
+  0,
+  1, //顶点2法向量
+  0,
+  0,
+  1, //顶点3法向量
+
+  0,
+  1,
+  0, //顶点4法向量
+  0,
+  1,
+  0, //顶点5法向量
+  0,
+  1,
+  0 //顶点6法向量
+])
+// 设置几何体attributes属性的位置normal属性
+geometry.attributes.normal = new THREE.BufferAttribute(normals, 3) //3个为一组,表示一个顶点的法向量数据
 // 设置几何体attributes属性的位置position属性
 geometry.attributes.position = attribue
 //类型数组创建顶点颜色color数据
@@ -93,14 +115,14 @@ var colors = new Float32Array([
 // 设置几何体attributes属性的颜色color属性
 geometry.attributes.color = new THREE.BufferAttribute(colors, 3) //3个为一组,表示一个顶点的颜色数据RGB
 //材质对象
-var material = new THREE.PointsMaterial({
+var material = new THREE.MeshBasicMaterial({
   // 使用顶点颜色数据渲染模型，不需要再定义color属性
   // color: 0xff0000,
   vertexColors: colors, //THREE.VertexColors, //以顶点颜色为准
   size: 10.0 //点对象像素尺寸
 })
 // 点渲染模式  点模型对象Points
-var points = new THREE.Points(geometry, material) //点模型对象
+var points = new THREE.Mesh(geometry, material) //点模型对象
 points.position.set(-120, 0, 0) //设置mesh3模型对象的xyz坐标为120,0,0
 scene.add(points) //点对象添加到场景
 
