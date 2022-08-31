@@ -1,6 +1,7 @@
 import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+// import earthImg from './src/asset/Earth.png'
 /**
  * 创建场景对象Scene
  */
@@ -210,6 +211,25 @@ var material = new THREE.LineBasicMaterial({
 //线条模型对象
 var line = new THREE.Line(geometry, material)
 scene.add(line) //线条对象添加到场景中
+
+// 纹理贴图映射到一个矩形平面上
+var geometry = new THREE.SphereGeometry(60, 25, 25) //球体
+// TextureLoader创建一个纹理加载器对象，可以加载图片作为几何体纹理
+var textureLoader = new THREE.TextureLoader()
+// 执行load方法，加载纹理贴图成功后，返回一个纹理对象Texture
+textureLoader.load('Earth.png', function (texture) {
+  var material = new THREE.MeshLambertMaterial({
+    // color: 0x0000ff,
+    // 设置颜色纹理贴图：Texture对象作为材质map属性的属性值
+    map: texture //设置颜色贴图属性值
+  }) //材质对象Material
+  var mesh = new THREE.Mesh(geometry, material) //网格模型对象Mesh
+  mesh.position.set(0, 300, 0)
+  scene.add(mesh) //网格模型添加到场景中
+
+  //纹理贴图加载成功后，调用渲染函数执行渲染操作
+  // render();
+})
 /**
  * 光源设置
  */
@@ -219,8 +239,14 @@ point.position.set(400, 200, 300) //点光源位置
 scene.add(point) //点光源添加到场景中
 // 点光源2  位置和point关于原点对称
 var point2 = new THREE.PointLight(0xffffff)
-point2.position.set(-400, -200, -300) //点光源位置
+point2.position.set(-400, 800, -300) //点光源位置
 scene.add(point2) //点光源添加到场景中
+var point3 = new THREE.PointLight(0xffffff)
+point3.position.set(-400, 200, 300) //点光源位置
+scene.add(point3) //点光源添加到场景中
+var point4 = new THREE.PointLight(0xffffff)
+// point4.position.set(400, 300, 300) //点光源位置
+scene.add(point4) //点光源添加到场景中
 //环境光
 var ambient = new THREE.AmbientLight(0x444444)
 scene.add(ambient)
