@@ -249,6 +249,27 @@ var mesh = new THREE.Mesh(geometry8, material8) //网格模型对象Mesh
 mesh.position.set(0, -120.0)
 scene.add(mesh) //网格模型添加到场景中
 mesh.rotateX(-Math.PI / 2)
+
+/**
+ * 创建一个设置重复纹理的管道
+ */
+var curve = new THREE.CatmullRomCurve3([new THREE.Vector3(-80, -40, 0), new THREE.Vector3(-70, 40, 0), new THREE.Vector3(70, 40, 0), new THREE.Vector3(80, -40, 0)])
+var tubeGeometry = new THREE.TubeGeometry(curve, 100, 0.6, 50, false)
+var textureLoader2 = new THREE.TextureLoader()
+var texturePng = textureLoader2.load('flowLine.png')
+// 设置阵列模式为 RepeatWrapping
+texturePng.wrapS = THREE.RepeatWrapping
+texturePng.wrapT = THREE.RepeatWrapping
+// 设置x方向的偏移(沿着管道路径方向)，y方向默认1
+//等价texture.repeat= new THREE.Vector2(20,1)
+texturePng.repeat.x = 20
+var tubeMaterial = new THREE.MeshPhongMaterial({
+  map: texturePng,
+  transparent: true
+})
+var mesh = new THREE.Mesh(tubeGeometry, tubeMaterial) //网格模型对象Mesh
+mesh.position.set(200, 200)
+scene.add(mesh) //网格模型添加到场景中
 // textureLoader.offset = new THREE.Vector2(0.3, 0.1)
 /**
  * 光源设置
@@ -300,6 +321,7 @@ function render() {
   //执行渲染操作   指定场景、相机作为参数
   renderer.render(scene, camera)
   // mesh.rotateY(0.001 * t) //旋转角速度0.001弧度每毫秒
+  texturePng.offset.x -= 0.06
 }
 render()
 new OrbitControls(camera, renderer.domElement) //创建控件对象
