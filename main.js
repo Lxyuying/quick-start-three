@@ -40,8 +40,9 @@ mesh3.position.set(120, 0, 0) //设置mesh3模型对象的xyz坐标为120,0,0
 scene.add(mesh3) //
 
 // 自定义几何体
-var geometry = new THREE.BufferGeometry() //创建一个Buffer类型几何体对象
-//类型数组创建顶点数据
+var geometry = new THREE.BufferGeometry() //声明一个缓冲几何体对象
+
+//类型数组创建顶点位置position数据
 var vertices = new Float32Array([
   0,
   0,
@@ -52,6 +53,7 @@ var vertices = new Float32Array([
   0,
   100,
   0, //顶点3坐标
+
   0,
   0,
   10, //顶点4坐标
@@ -63,25 +65,44 @@ var vertices = new Float32Array([
   10 //顶点6坐标
 ])
 // 创建属性缓冲区对象
-var attribue = new THREE.BufferAttribute(vertices, 3) //3个为一组，表示一个顶点的xyz坐标
-// 设置几何体attributes属性的位置属性
+var attribue = new THREE.BufferAttribute(vertices, 3) //3个为一组，作为一个顶点的xyz坐标
+// 设置几何体attributes属性的位置position属性
 geometry.attributes.position = attribue
-// 三角面(网格)渲染模式
-// var material = new THREE.MeshBasicMaterial({
-//   color: 0x0000ff, //三角面颜色
-//   side: THREE.DoubleSide //两面可见
-// }) //材质对象
-// 点渲染模式
-var material = new THREE.LineBasicMaterial({
-  color: 0xff0000,
+//类型数组创建顶点颜色color数据
+var colors = new Float32Array([
+  1,
+  0,
+  0, //顶点1颜色
+  0,
+  1,
+  0, //顶点2颜色
+  0,
+  0,
+  1, //顶点3颜色
+
+  1,
+  1,
+  0, //顶点4颜色
+  0,
+  1,
+  1, //顶点5颜色
+  1,
+  0,
+  1 //顶点6颜色
+])
+// 设置几何体attributes属性的颜色color属性
+geometry.attributes.color = new THREE.BufferAttribute(colors, 3) //3个为一组,表示一个顶点的颜色数据RGB
+//材质对象
+var material = new THREE.PointsMaterial({
+  // 使用顶点颜色数据渲染模型，不需要再定义color属性
+  // color: 0xff0000,
+  vertexColors: colors, //THREE.VertexColors, //以顶点颜色为准
   size: 10.0 //点对象像素尺寸
-}) //材质对象
-// var mesh4 = new THREE.Mesh(geometry, material) //网格模型对象Mesh
-// mesh4.position.set(-120, 0, 0) //设置mesh3模型对象的xyz坐标为120,0,0
-// scene.add(mesh4) //
-var mesh4 = new THREE.Line(geometry, material) //点模型对象
-mesh4.position.set(-120, 0, 0) //设置mesh3模型对象的xyz坐标为120,0,0
-scene.add(mesh4) //点对象添加到场景中
+})
+// 点渲染模式  点模型对象Points
+var points = new THREE.Points(geometry, material) //点模型对象
+points.position.set(-120, 0, 0) //设置mesh3模型对象的xyz坐标为120,0,0
+scene.add(points) //点对象添加到场景
 
 /**
  * 光源设置
