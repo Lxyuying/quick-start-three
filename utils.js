@@ -432,3 +432,27 @@ export const createTree = scene => {
     sprite.position.set(1000 * k1, -70, 1000 * k2)
   }
 }
+
+/**
+ * 精灵创建下雨效果
+ */
+export const createRain = () => {
+  var textureTree = new THREE.TextureLoader().load('rain.png')
+  // 批量创建表示雨滴的精灵模型
+  var group = new THREE.Group()
+  for (let i = 0; i < 400; i++) {
+    var spriteMaterial = new THREE.SpriteMaterial({
+      map: textureTree //设置精灵纹理贴图
+    })
+    // 创建精灵模型对象
+    var sprite = new THREE.Sprite(spriteMaterial)
+    sprite.scale.set(8, 10, 1) //// 只需要设置x、y两个分量就可以
+    var k1 = Math.random() - 0.5
+    var k2 = Math.random() - 0.5
+    var k3 = Math.random() - 0.5
+    // 设置精灵模型位置，在整个空间上上随机分布
+    sprite.position.set(1000 * k1, 1000 * k3, 1000 * k2)
+    group.add(sprite)
+  }
+  return group
+}

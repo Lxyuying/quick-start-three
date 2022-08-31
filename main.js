@@ -2,7 +2,7 @@ import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
-import { createTree, createSixImg, createVideoTextrue, createCanvasPic, createCanvasTexture, createLight, createPicFlow, createRctGrass, createPicCircle, createCircleLine, createPersonMesh, createBox, createSphere, createCylinder, createBufferGeometry, printLocal } from './utils'
+import { createRain, createTree, createSixImg, createVideoTextrue, createCanvasPic, createCanvasTexture, createLight, createPicFlow, createRctGrass, createPicCircle, createCircleLine, createPersonMesh, createBox, createSphere, createCylinder, createBufferGeometry, printLocal } from './utils'
 
 /**
  * 创建场景对象Scene
@@ -35,6 +35,8 @@ scene.add(createCanvasPic())
 scene.add(createVideoTextrue())
 scene.add(createSixImg())
 createTree(scene)
+const rainGroup = createRain()
+scene.add(rainGroup)
 
 /**
  * 相机设置
@@ -46,6 +48,8 @@ var s = 200 //三维场景显示范围控制系数，系数越大，显示的范
 //创建相机对象
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000)
 camera.position.set(200, 300, 200) //设置相机位置
+camera.position.set(292, 109, 268) //设置相机位置
+
 camera.lookAt(scene.position) //设置相机方向(指向的场景对象)
 /**
  * 创建渲染器对象
@@ -60,6 +64,15 @@ function render() {
   let T1 = new Date() //本次时间
   let t = T1 - T0 //时间差
   T0 = T1 //把本次时间赋值给上次时间
+  // 每次渲染都会更新雨滴的位置，进而产生动画效果
+  rainGroup.children.forEach(sprite => {
+    // 雨滴的y坐标每次减1
+    sprite.position.y -= 1
+    if (sprite.position.y < -120) {
+      // 如果雨滴落到地面，重置y，从新下落
+      sprite.position.y = 200
+    }
+  })
   requestAnimationFrame(render)
   //执行渲染操作   指定场景、相机作为参数
   renderer.render(scene, camera)
