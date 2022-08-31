@@ -1,5 +1,6 @@
 import './style.css'
 import * as THREE from 'three'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 /**
  * 创建场景对象Scene
  */
@@ -56,3 +57,5 @@ function render() {
   mesh.rotateY(0.001 * t) //旋转角速度0.001弧度每毫秒
 }
 render()
+new OrbitControls(camera, renderer.domElement) //创建控件对象
+// controls.addEventListener('change', render) //监听鼠标、键盘事件
