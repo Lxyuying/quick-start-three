@@ -38,6 +38,51 @@ var mesh3 = new THREE.Mesh(geometry3, material3) //网格模型对象Mesh
 // mesh3.translateX(120); //球体网格模型沿Y轴正方向平移120
 mesh3.position.set(120, 0, 0) //设置mesh3模型对象的xyz坐标为120,0,0
 scene.add(mesh3) //
+
+// 自定义几何体
+var geometry = new THREE.BufferGeometry() //创建一个Buffer类型几何体对象
+//类型数组创建顶点数据
+var vertices = new Float32Array([
+  0,
+  0,
+  0, //顶点1坐标
+  50,
+  0,
+  0, //顶点2坐标
+  0,
+  100,
+  0, //顶点3坐标
+  0,
+  0,
+  10, //顶点4坐标
+  0,
+  0,
+  100, //顶点5坐标
+  50,
+  0,
+  10 //顶点6坐标
+])
+// 创建属性缓冲区对象
+var attribue = new THREE.BufferAttribute(vertices, 3) //3个为一组，表示一个顶点的xyz坐标
+// 设置几何体attributes属性的位置属性
+geometry.attributes.position = attribue
+// 三角面(网格)渲染模式
+// var material = new THREE.MeshBasicMaterial({
+//   color: 0x0000ff, //三角面颜色
+//   side: THREE.DoubleSide //两面可见
+// }) //材质对象
+// 点渲染模式
+var material = new THREE.LineBasicMaterial({
+  color: 0xff0000,
+  size: 10.0 //点对象像素尺寸
+}) //材质对象
+// var mesh4 = new THREE.Mesh(geometry, material) //网格模型对象Mesh
+// mesh4.position.set(-120, 0, 0) //设置mesh3模型对象的xyz坐标为120,0,0
+// scene.add(mesh4) //
+var mesh4 = new THREE.Line(geometry, material) //点模型对象
+mesh4.position.set(-120, 0, 0) //设置mesh3模型对象的xyz坐标为120,0,0
+scene.add(mesh4) //点对象添加到场景中
+
 /**
  * 光源设置
  */
