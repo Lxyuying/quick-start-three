@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 // 立方体网格模型
 export const createBox = () => {
   var geometry1 = new THREE.BoxGeometry(100, 100, 100)
@@ -571,7 +571,9 @@ export const createPositionalAudio = (scene, camera) => {
     PosAudio.setBuffer(AudioBuffer)
     PosAudio.setVolume(0.9) //音量
     PosAudio.setRefDistance(200) //参数值越大,声音越大
+    PosAudio.setLoop(true)
     PosAudio.play() //播放
+
     // 音频分析器和音频绑定，可以实时采集音频时域数据进行快速傅里叶变换
   })
   analyser = new THREE.AudioAnalyser(PosAudio)
@@ -599,4 +601,22 @@ export const createAudioGroup = () => {
     group.add(mesh)
   }
   return group
+}
+
+export const loadDam = scene => {
+  const loader = new GLTFLoader()
+
+  loader.load(
+    'gravity_dam/scene.gltf',
+    function (gltf) {
+      console.log(gltf.scene)
+      gltf.scene.position.set(0, -120, 400)
+      gltf.scene.scale.set(20, 20, 20)
+      scene.add(gltf.scene)
+    },
+    undefined,
+    function (error) {
+      console.error(error)
+    }
+  )
 }

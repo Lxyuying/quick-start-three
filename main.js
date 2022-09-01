@@ -3,6 +3,7 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 import {
+  loadDam,
   createAudioGroup,
   createPositionalAudio,
   createBCAudio,
@@ -63,8 +64,9 @@ scene.add(rainGroup)
 const { group, mixer } = createAnimation()
 scene.add(group)
 const analyser = createPositionalAudio(scene, camera)
-const audioGroup = createAudioGroup()
+const audioGroup = createAudioGroup(scene)
 scene.add(audioGroup)
+loadDam(scene)
 // 创建背景音乐
 // createBCAudio()
 
