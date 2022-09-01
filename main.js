@@ -2,7 +2,26 @@ import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
-import { createRain, createTree, createSixImg, createVideoTextrue, createCanvasPic, createCanvasTexture, createLight, createPicFlow, createRctGrass, createPicCircle, createCircleLine, createPersonMesh, createBox, createSphere, createCylinder, createBufferGeometry, printLocal } from './utils'
+import {
+  createAnimation,
+  createRain,
+  createTree,
+  createSixImg,
+  createVideoTextrue,
+  createCanvasPic,
+  createCanvasTexture,
+  createLight,
+  createPicFlow,
+  createRctGrass,
+  createPicCircle,
+  createCircleLine,
+  createPersonMesh,
+  createBox,
+  createSphere,
+  createCylinder,
+  createBufferGeometry,
+  printLocal
+} from './utils'
 
 /**
  * 创建场景对象Scene
@@ -37,6 +56,8 @@ scene.add(createSixImg())
 createTree(scene)
 const rainGroup = createRain()
 scene.add(rainGroup)
+const { group, mixer } = createAnimation()
+scene.add(group)
 
 /**
  * 相机设置
@@ -58,7 +79,7 @@ var renderer = new THREE.WebGLRenderer()
 renderer.setSize(width, height) //设置渲染区域尺寸
 renderer.setClearColor(0xb9d3ff, 1) //设置背景颜色
 document.getElementById('app').appendChild(renderer.domElement) //body元素中插入canvas对象
-
+var clock = new THREE.Clock()
 let T0 = new Date() //上次时间
 function render() {
   let T1 = new Date() //本次时间
@@ -78,6 +99,7 @@ function render() {
   renderer.render(scene, camera)
   // mesh.rotateY(0.001 * t) //旋转角速度0.001弧度每毫秒
   texturePng.offset.x -= 0.06
+  mixer.update(clock.getDelta())
 }
 render()
 new OrbitControls(camera, renderer.domElement) //创建控件对象
