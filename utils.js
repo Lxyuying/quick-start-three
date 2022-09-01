@@ -1,5 +1,16 @@
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader'
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer'
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass'
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass'
+import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass'
+
+/**
+ * 创建点击的信息窗体
+ */
+const wInfo = document.getElementById('window-info')
+
 // 立方体网格模型
 export const createBox = () => {
   var geometry1 = new THREE.BoxGeometry(100, 100, 100)
@@ -619,4 +630,75 @@ export const loadDam = scene => {
       console.error(error)
     }
   )
+}
+
+/* 选中模型的数组  颜色 */
+/**
+ *
+ * @param {mesh数组} selectedObjects
+ * @param {高亮的颜色} color
+ * @param {scene/camera/renderer} config
+ */
+let composer, renderPass, outlinePass, effectFXAA
+export const addColor = (color, config) => {
+  // 创建一个EffectComposer（效果组合器）对象，然后在该对象上添加后期处理通道。
+  composer = new EffectComposer(config.renderer)
+  // console.log(window.devicePixelRatio)
+  composer.setPixelRatio(6)
+  // 新建一个场景通道  为了覆盖到原理来的场景上
+  renderPass = new RenderPass(config.scene, config.camera)
+  composer.addPass(renderPass)
+
+  // 物体边缘发光通道
+  outlinePass = new OutlinePass(new THREE.Vector2(window.innerWidth, window.innerHeight), config.scene, config.camera)
+
+  outlinePass.edgeStrength = 10.0 // 边框的亮度
+  outlinePass.edgeGlow = 1 // 光晕[0,1]
+  outlinePass.usePatternTexture = false // 是否使用父级的材质
+  outlinePass.edgeThickness = 1.0 // 边框宽度
+  outlinePass.downSampleRatio = 2 // 边框弯曲度
+  outlinePass.pulsePeriod = 5 // 呼吸闪烁的速度
+  outlinePass.visibleEdgeColor.set(parseInt(color)) // 呼吸显示的颜色
+  outlinePass.hiddenEdgeColor = new THREE.Color(0, 0, 0) // 呼吸消失的颜色
+  outlinePass.clear = true
+  composer.addPass(outlinePass)
+
+  // 自定义的着色器通道 作为参数
+  effectFXAA = new ShaderPass(FXAAShader)
+  effectFXAA.uniforms.resolution.value.set(1 / window.innerWidth, 1 / window.innerHeight)
+  effectFXAA.renderToScreen = true
+  composer.addPass(effectFXAA)
+  return {
+    composer, // composer在render循环函数中调用
+    outlinePass // 实例化一次后设置  outlinePass.selectedObjects = selectedObjects
+  }
+}
+
+//获取鼠标坐标
+var mouse = new THREE.Vector2()
+var raycaster = new THREE.Raycaster()
+
+export const getmodelclick = ({ camera, scene }) => {
+  //获取在射线上的接触点
+  // console.log(camera.isPerspectiveCamera)
+  const onmodelclick = event => {
+    // console.log(camera)
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1
+
+    raycaster.setFromCamera(mouse, camera)
+    const intersects = raycaster.intersectObjects(scene.children)
+    console.log(intersects[0].object)
+    console.log([wInfo.style])
+    console.log(mouse.x, mouse.y)
+    wInfo.style.left = event.clientX + 'px'
+    wInfo.style.top = event.clientY + 'px'
+    wInfo.style.display = 'block'
+    wInfo.innerHTML = `我是${intersects[0].object.name}`
+    // for (let i = 0; i < intersects.length; i++) {
+    outlinePass.selectedObjects = [intersects[0].object]
+    // intersects[0].object.material.color.set(0xff0000)
+    // }
+  }
+  return onmodelclick
 }

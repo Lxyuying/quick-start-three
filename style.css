@@ -50,6 +50,22 @@ table {
 }
 
 #app {
+  position: relative;
   width: 100%;
   height: 100%;
+}
+
+#three-dom{
+  width: 100%;
+  height: 100%;
+}
+
+#window-info {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  left: 0;
+  top: 0;
+  background-color: red;
+  display: none;
 }
