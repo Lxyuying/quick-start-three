@@ -461,7 +461,7 @@ export const createRain = () => {
  * 编辑帧动画数据
  */
 export const createAnimation = () => {
-  var geometry1 = new THREE.BoxGeometry(100, 100, 100)
+  var geometry1 = new THREE.BoxGeometry(1000, 100, 100)
   var material1 = new THREE.MeshLambertMaterial({
     color: 0xff0000,
     opacity: 0.7,
@@ -517,4 +517,86 @@ export const createAnimation = () => {
   // AnimationAction.loop = THREE.LoopOnce; //不循环播放
   AnimationAction.play() //开始播放
   return { group, mixer }
+}
+
+export const createBCAudio = () => {
+  // 非位置音频可用于不考虑位置的背景音乐
+  // 创建一个监听者
+  var listener = new THREE.AudioListener()
+  // camera.add( listener );
+  // 创建一个非位置音频对象  用来控制播放
+  var audio = new THREE.Audio(listener)
+  // 创建一个音频加载器对象
+  var audioLoader = new THREE.AudioLoader()
+  // 加载音频文件，返回一个音频缓冲区对象作为回调函数参数
+  audioLoader.load('Sunrise.mp3', function (AudioBuffer) {
+    // console.log(AudioBuffer)
+    // 音频缓冲区对象关联到音频对象audio
+    audio.setBuffer(AudioBuffer)
+    audio.setLoop(true) //是否循环
+    audio.setVolume(0.5) //音量
+    // 播放缓冲区中的音频数据
+    audio.play() //play播放、stop停止、pause暂停
+  })
+}
+
+export const createPositionalAudio = (scene, camera) => {
+  var analyser = null // 声明一个分析器变量
+  var geometry = new THREE.BoxGeometry(100, 100, 100)
+  var material = new THREE.MeshLambertMaterial({
+    color: 0xff0000,
+    opacity: 0.7,
+    transparent: true
+  }) //材质对象Material
+  // 用来定位音源的网格模型
+  var audioMesh = new THREE.Mesh(geometry, material)
+  // 设置网格模型的位置，相当于设置音源的位置
+  audioMesh.position.set(0, 0, 300)
+  scene.add(audioMesh)
+
+  // 创建一个虚拟的监听者
+  var listener = new THREE.AudioListener()
+  // 监听者绑定到相机对象
+  camera.add(listener)
+  // 创建一个位置音频对象,监听者作为参数,音频和监听者关联。
+  var PosAudio = new THREE.PositionalAudio(listener)
+  //音源绑定到一个网格模型上
+  audioMesh.add(PosAudio)
+  // 创建一个音频加载器
+  var audioLoader = new THREE.AudioLoader()
+  // 加载音频文件，返回一个音频缓冲区对象作为回调函数参数
+  audioLoader.load('Bye Cinderella.mp3', function (AudioBuffer) {
+    // console.log(buffer);
+    // 音频缓冲区对象关联到音频对象audio
+    PosAudio.setBuffer(AudioBuffer)
+    PosAudio.setVolume(0.9) //音量
+    PosAudio.setRefDistance(200) //参数值越大,声音越大
+    PosAudio.play() //播放
+    // 音频分析器和音频绑定，可以实时采集音频时域数据进行快速傅里叶变换
+  })
+  analyser = new THREE.AudioAnalyser(PosAudio)
+  return analyser
+}
+
+/**
+ * 创建多个网格模型组成的组对象
+ */
+
+export const createAudioGroup = () => {
+  /**
+   * 创建多个网格模型组成的组对象
+   */
+  var group = new THREE.Group()
+  let N = 128 //控制音频分析器返回频率数据数量
+  for (let i = 0; i < N / 2; i++) {
+    var box = new THREE.BoxGeometry(10, 100, 10) //创建一个立方体几何对象
+    var material = new THREE.MeshPhongMaterial({
+      color: 0x0000ff
+    }) //材质对象
+    var mesh = new THREE.Mesh(box, material) //网格模型对象
+    // 长方体间隔20，整体居中
+    mesh.position.set(20 * i - (N / 2) * 10, 600, 0)
+    group.add(mesh)
+  }
+  return group
 }

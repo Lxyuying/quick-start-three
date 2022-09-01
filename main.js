@@ -3,6 +3,9 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 import {
+  createAudioGroup,
+  createPositionalAudio,
+  createBCAudio,
   createAnimation,
   createRain,
   createTree,
@@ -27,6 +30,7 @@ import {
  * 创建场景对象Scene
  */
 var scene = new THREE.Scene()
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000)
 
 scene.add(createBox()) //网格模型添加到场景中
 
@@ -58,6 +62,11 @@ const rainGroup = createRain()
 scene.add(rainGroup)
 const { group, mixer } = createAnimation()
 scene.add(group)
+const analyser = createPositionalAudio(scene, camera)
+const audioGroup = createAudioGroup()
+scene.add(audioGroup)
+// 创建背景音乐
+// createBCAudio()
 
 /**
  * 相机设置
@@ -67,7 +76,6 @@ var height = window.innerHeight //窗口高度
 var k = width / height //窗口宽高比
 var s = 200 //三维场景显示范围控制系数，系数越大，显示的范围越大
 //创建相机对象
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000)
 camera.position.set(200, 300, 200) //设置相机位置
 camera.position.set(292, 109, 268) //设置相机位置
 
@@ -100,6 +108,17 @@ function render() {
   // mesh.rotateY(0.001 * t) //旋转角速度0.001弧度每毫秒
   texturePng.offset.x -= 0.06
   mixer.update(clock.getDelta())
+  if (analyser) {
+    // 获得频率数据N个
+    var arr = analyser.getFrequencyData()
+    // console.log(arr)
+    // console.log(arr);
+    // 遍历组对象，每个网格子对象设置一个对应的频率数据
+    audioGroup.children.forEach((elem, index) => {
+      elem.scale.y = arr[index] / 80
+      elem.material.color.r = arr[index] / 200
+    })
+  }
 }
 render()
 new OrbitControls(camera, renderer.domElement) //创建控件对象
